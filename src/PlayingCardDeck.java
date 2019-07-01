@@ -8,8 +8,8 @@ public class PlayingCardDeck {
 
     PlayingCardDeck() {
         for (Suit s : Suit.values())
-            for (Rank r : Rank.values())
-                deck.add(new PlayingCard(s, r));
+            for (Value v : Value.values())
+                deck.add(new PlayingCard(s, v));
     }
 
     void playTopCard() {
@@ -26,7 +26,7 @@ public class PlayingCardDeck {
 
     void printDeck() {
         for (int i = 0 ; i < deck.size() ; i++ )
-            System.out.println("C"+(i+1)+"= " + deck.get(i).getRank() + " " + deck.get(i).getSuit());
+            System.out.println("C"+(i+1)+"= " + deck.get(i).getValue() + " " + deck.get(i).getSuit());
     }
 
 }

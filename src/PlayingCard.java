@@ -1,13 +1,13 @@
 public class PlayingCard {
 
     private Suit suit;
-    private Rank rank;
+    private Value value;
     private Boolean isFaceUp;
     //front face image
 
-    PlayingCard(Suit suit, Rank rank) {
+    PlayingCard(Suit suit, Value value) {
         this.suit=suit;
-        this.rank=rank;
+        this.value = value;
         isFaceUp = false;
     }
 
@@ -23,7 +23,7 @@ public class PlayingCard {
         return suit;
     }
 
-    Rank getRank() {
-        return rank;
+    Value getValue() {
+        return value;
     }
 }
