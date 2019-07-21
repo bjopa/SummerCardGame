@@ -12,7 +12,7 @@ public class Menu extends Games{
         Scanner sc = new Scanner(System.in);
         boolean exitGame = false;
 
-        do {
+        while (true) {
             System.out.print("Choice: ");
             int choice = sc.nextInt();
 
@@ -22,14 +22,14 @@ public class Menu extends Games{
                     break;
                 case 0:
                     exitGame = true;
-                    break;
+                    return;
                 default:
                     System.out.println("Wrong choice, try again!");
                     break;
 
             }
             displayMenu();
-        } while (!exitGame);
+        }
     }
 }
 
