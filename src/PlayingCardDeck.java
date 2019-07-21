@@ -18,13 +18,21 @@ public class PlayingCardDeck {
         Collections.shuffle(deck);
     }
 
-    void playTopCard() {
+    void showTopCard() {
         System.out.println("\nCard " + cardNumber + " played: " + deck.get(0).getValue() + " of " + deck.get(0).getSuit());
         cardNumber++;
     }
 
-    void cardToBottom() {
-
+    void cardToBottom(PlayingCard insertCard) {
+        //PlayingCard temp = new PlayingCard(deck.get(0).getSuit(), deck.get(0).getValue());
+        //deck.remove(0);
+        try {
+            deck.remove(insertCard);
+        }
+        catch (Exception e) {
+            System.out.println("Card unavailable...");
+        }
+        deck.add(insertCard);
     }
 
     void moveToDiscardPile() {

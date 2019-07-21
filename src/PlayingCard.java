@@ -5,9 +5,11 @@ public class PlayingCard {
     private Suit suit;
     private Value value;
     private Boolean isFaceUp;
-    private String fileName="";
-    //public Image faceImg = Toolkit.getDefaultToolkit().getImage(fileName);
+
+    // FOR UNUSED GRAPHICS...
+    private String fileName = "";
     public Image faceImg = Toolkit.getDefaultToolkit().getImage("D3.jpg");
+    //public Image faceImg = Toolkit.getDefaultToolkit().getImage(fileName);
 
     PlayingCard(Suit suit, Value value) {
         this.suit = suit;
@@ -52,19 +54,45 @@ public class PlayingCard {
                 break;
         }
         switch (value) {
-            case TWO: fileName += "2.jpg"; break;
-            case THREE: fileName += "3.jpg"; break;
-            case FOUR: fileName += "4.jpg"; break;
-            case FIVE: fileName += "5.jpg"; break;
-            case SIX: fileName += "6.jpg"; break;
-            case SEVEN: fileName += "7.jpg"; break;
-            case EIGHT: fileName += "8.jpg"; break;
-            case NINE: fileName += "9.jpg"; break;
-            case TEN: fileName += "10.jpg"; break;
-            case JACK: fileName += "J.jpg"; break;
-            case QUEEN: fileName += "Q.jpg"; break;
-            case KING: fileName += "K.jpg"; break;
-            case ACE: fileName += "A.jpg"; break;
+            case TWO:
+                fileName += "2.jpg";
+                break;
+            case THREE:
+                fileName += "3.jpg";
+                break;
+            case FOUR:
+                fileName += "4.jpg";
+                break;
+            case FIVE:
+                fileName += "5.jpg";
+                break;
+            case SIX:
+                fileName += "6.jpg";
+                break;
+            case SEVEN:
+                fileName += "7.jpg";
+                break;
+            case EIGHT:
+                fileName += "8.jpg";
+                break;
+            case NINE:
+                fileName += "9.jpg";
+                break;
+            case TEN:
+                fileName += "10.jpg";
+                break;
+            case JACK:
+                fileName += "J.jpg";
+                break;
+            case QUEEN:
+                fileName += "Q.jpg";
+                break;
+            case KING:
+                fileName += "K.jpg";
+                break;
+            case ACE:
+                fileName += "A.jpg";
+                break;
         }
     }
 
