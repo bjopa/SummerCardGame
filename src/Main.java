@@ -5,7 +5,7 @@ public class Main extends Menu {
         //displayMenu();
         //menuChoice();
 
-        highOrLow();
+        hugo();
 
     }
 
