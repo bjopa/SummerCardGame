@@ -4,14 +4,15 @@ class Games {
     private static int points = 0;
 
     static void highOrLow() {
+        Sfx corr = new Sfx("correct.wav");
+        Sfx incorr = new Sfx("incorrect.wav");
+
         Scanner sc = new Scanner(System.in);
         PlayingCardDeck deckOne = new PlayingCardDeck();
         deckOne.shuffleDeck();
         String response = null;
         boolean cont = true;
 
-        System.out.println("\nRules: Guess if the next card is Higher or Lower than the current");
-        System.out.println("Guess by typing 'h' for Higher or 'l' for Lower");
         System.out.println("\nGood Luck!");
 
         do {
@@ -25,10 +26,21 @@ class Games {
                 if (deckOne.discardPile.size() > 0) {
                     int diff = (top.getNumValue() - deckOne.discardPile.get(deckOne.discardPile.size() - 1).getNumValue());
 
-                    if (diff > 0 && response.equals("h")) System.out.println("CORRECT, points: " + (++points));
-                    else if (diff == 0) System.out.println("CORRECT (lucky Bastard...), points: " + (++points));
-                    else if (diff < 0 && response.equals("l")) System.out.println("CORRECT, points: " + (++points));
-                    else {
+                    if (diff > 0 && response.equals("h")) {
+                        Thread sfx = new Thread(corr);
+                        sfx.start();
+                        System.out.println("CORRECT, points: " + (++points));
+                    } else if (diff == 0) {
+                        Thread sfx = new Thread(corr);
+                        sfx.start();
+                        System.out.println("CORRECT (lucky Bastard...), points: " + (++points));
+                    } else if (diff < 0 && response.equals("l")) {
+                        Thread sfx = new Thread(corr);
+                        sfx.start();
+                        System.out.println("CORRECT, points: " + (++points));
+                    } else {
+                        Thread sfx = new Thread(incorr);
+                        sfx.start();
                         System.out.println("WRONG, points: " + points);
                         deckOne.discardPile.addAll(deckOne.deck);
                         deckOne.deck.clear();
@@ -64,6 +76,5 @@ class Games {
         } while (cont);
 
     }
-
 
 }
