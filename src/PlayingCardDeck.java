@@ -23,8 +23,14 @@ public class PlayingCardDeck {
         cardNumber++;
     }
 
-    void cardToBottom() {
-
+    void cardToBottom(PlayingCard insertCard) {
+        try {
+            deck.remove(insertCard);
+        }
+        catch (Exception e) {
+            System.out.println("Card unavailable...");
+        }
+        deck.add(insertCard);
     }
 
     void moveToDiscardPile() {
