@@ -4,6 +4,9 @@ class Games {
     private static int points = 0;
 
     static void highOrLow() {
+        Sfx corr = new Sfx("correct.wav");
+        Sfx incorr = new Sfx("incorrect.wav");
+
         Scanner sc = new Scanner(System.in);
         PlayingCardDeck deckOne = new PlayingCardDeck();
         deckOne.shuffleDeck();
@@ -21,10 +24,24 @@ class Games {
                 if (deckOne.discardPile.size() > 0) {
                     int diff = (deckOne.deck.get(0).getNumValue() - deckOne.discardPile.get(deckOne.discardPile.size() - 1).getNumValue());
 
-                    if (diff > 0 && response.equals("h")) System.out.println("CORRECT, points: " + (++points));
-                    else if (diff == 0) System.out.println("CORRECT (lucky Bastard...), points: " + (++points));
-                    else if (diff < 0 && response.equals("l")) System.out.println("CORRECT, points: " + (++points));
+                    if (diff > 0 && response.equals("h")) {
+                        Thread sfx = new Thread(corr);
+                        sfx.start();
+                        System.out.println("CORRECT, points: " + (++points));
+                    }
+                    else if (diff == 0) {
+                        Thread sfx = new Thread(corr);
+                        sfx.start();
+                        System.out.println("CORRECT (lucky Bastard...), points: " + (++points));
+                    }
+                    else if (diff < 0 && response.equals("l")) {
+                        Thread sfx = new Thread(corr);
+                        sfx.start();
+                        System.out.println("CORRECT, points: " + (++points));
+                    }
                     else {
+                        Thread sfx = new Thread(incorr);
+                        sfx.start();
                         System.out.println("WRONG, points: " + points);
                         deckOne.discardPile.addAll(deckOne.deck);
                         deckOne.deck.clear();
@@ -56,6 +73,7 @@ class Games {
                     sc.nextLine();
                 }
                 else cont=false;
+                System.out.println();
             }
 
         } while (cont);
