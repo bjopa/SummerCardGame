@@ -2,11 +2,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PlayingCardDeck {
+class PlayingCardDeck {
 
     List<PlayingCard> deck = new ArrayList<>();
     List<PlayingCard> discardPile = new ArrayList<>();
-    private int cardNumber = 1;
+    private int cardNumber = 0;
 
     PlayingCardDeck() {
         for (Suit s : Suit.values())
@@ -18,9 +18,8 @@ public class PlayingCardDeck {
         Collections.shuffle(deck);
     }
 
-    void playTopCard() {
-        System.out.println("\nCard " + cardNumber + " played: " + deck.get(0).getValue() + " of " + deck.get(0).getSuit());
-        cardNumber++;
+    PlayingCard getTopCard() {
+        return deck.get(0);
     }
 
     void cardToBottom(PlayingCard insertCard) {
@@ -33,17 +32,15 @@ public class PlayingCardDeck {
         deck.add(insertCard);
     }
 
+    void removeCardFromDeck(PlayingCard removeCard) {
+        deck.remove(removeCard);
+    }
+
     void moveToDiscardPile() {
         discardPile.add(deck.get(0));
-        deck.remove(0);
     }
 
-    void printDeck() {
-        for (int i = 0; i < deck.size(); i++)
-            System.out.println("C" + (i + 1) + "= " + deck.get(i).getValue() + " " + deck.get(i).getSuit());
-    }
-
-    public int getCardNumber() {
+    int getCardNumber() {
         return cardNumber;
     }
 
