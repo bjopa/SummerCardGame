@@ -1,8 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
-class PlayingCardGame extends grafik {
+class PlayingCardGame {
     private static int points = 0;
     private static Scanner sc = new Scanner(System.in);
 
@@ -92,27 +93,38 @@ class PlayingCardGame extends grafik {
         do {
             boolean endOfTurn = false;
             boolean pickAllowed = true;
+            boolean hasDiscarded = false;
             while (!endOfTurn) {
+                int lastDisCard = deckOne.discardPile.size() - 1;
                 System.out.println();
                 if (deckOne.discardPile.size() > 0) {
-                    System.out.println("Top of discardpile is: " + deckOne.discardPile.get(deckOne.discardPile.size() - 1).getValue()
-                            + " of " + deckOne.discardPile.get(deckOne.discardPile.size() - 1).getSuit());
+                    System.out.println("Top of discardpile is: " + deckOne.discardPile.get(lastDisCard).getValue()
+                            + " of " + deckOne.discardPile.get(lastDisCard).getSuit());
+                }
+                if (pileTwo.size() > 0) {
+                    System.out.println("Top of opponents pile: " + pileTwo.get(pileTwo.size() - 1).getValue()
+                            + " of " + pileTwo.get(pileTwo.size() - 1).getSuit());
                 }
                 if (pileOne.size() > 0) {
-                    System.out.println("Top of opponents hand: " + pileOne.get(0).getValue() + " of " + pileOne.get(0).getSuit()); //change to pile Two
+                    System.out.println("Top of your pile: " + pileOne.get(pileOne.size() - 1).getValue()
+                            + " of " + pileOne.get(pileOne.size() - 1).getSuit());
                 }
 
                 System.out.println("On your hand:");
                 for (PlayingCard pC : handOne) System.out.println(pC.getValue() + " of " + pC.getSuit());
 
                 System.out.println();
-                //TODO Remove if i menyn, så alla val alltid finns.
+                //TODO Remove if i menyn, så alla val alltid finns?
                 if (pickAllowed) System.out.println("1. Take top card from deck");
                 if (handOne.size() > 2) System.out.println("2. Discard card from hand");
-                if (checkPairHand(handOne)) System.out.println("3. Put down pair");
+                if (checkPairHand(handOne)) System.out.println("3. Put down pair from hand");
                 if (deckOne.discardPile.size() > 0) {
-                    if (checkPairDiscard(handOne, deckOne.discardPile.get(deckOne.discardPile.size() - 1)))
+                    if (checkPairDiscard(handOne, deckOne.discardPile.get(lastDisCard)))
                         System.out.println("4. Pair with top of discard pile");
+                }
+                if (pileTwo.size() > 0) {
+                    if (checkPairOpponent(handOne, pileTwo.get(pileTwo.size() - 1)))
+                        System.out.println("5. Pair with opponent pile");
                 }
                 System.out.println("0. End Turn");
                 System.out.print("Choice:");
@@ -122,14 +134,14 @@ class PlayingCardGame extends grafik {
 
                 switch (choice) {
                     case 1:
-                        if (pickAllowed && deckOne.deck.size() > 0) {
+                        if (pickAllowed && deckOne.deck.size() > 0 && !hasDiscarded) {
                             handOne.add(deckOne.deck.get(0));
                             deckOne.deck.remove(deckOne.deck.get(0));
                             if (handOne.size() > 2) pickAllowed = false;
                         } else System.out.println("Not allowed...");
                         break;
                     case 2:
-                        if (handOne.size() > 2) {
+                        if (handOne.size() > 2 && !hasDiscarded) {
                             System.out.println("Choose card to discard!");
                             for (int i = 0; i < handOne.size(); i++)
                                 System.out.println((i + 1) + ". " + handOne.get(i).getValue() + " of " + handOne.get(i).getSuit());
@@ -139,10 +151,11 @@ class PlayingCardGame extends grafik {
                             deckOne.discardPile.add(handOne.get(discChoice - 1));
                             handOne.remove(discChoice - 1);
                             pickAllowed = false;
+                            hasDiscarded = true;
                         } else System.out.println("Not allowed...");
                         break;
                     case 3:
-                        if (checkPairHand(handOne)) {
+                        if (checkPairHand(handOne) && !hasDiscarded) {
                             for (int i = 0; i < handOne.size() - 1; i++) {
                                 for (int j = i + 1; j < handOne.size(); j++) {
                                     if (handOne.get(i).getValue() == handOne.get(j).getValue()) {
@@ -153,24 +166,41 @@ class PlayingCardGame extends grafik {
                                     }
                                 }
                             }
-                            pickAllowed = true;
+                            if (handOne.size() <= 2) pickAllowed = true;
                         } else System.out.println("No pair on hand, why did you even...?");
                         break;
                     case 4:
-                        if (checkPairDiscard(handOne, deckOne.discardPile.get(deckOne.discardPile.size() - 1))) {
+                        if (checkPairDiscard(handOne, deckOne.discardPile.get(lastDisCard)) && !hasDiscarded) {
                             for (int i = 0; i < handOne.size(); i++) {
-                                if (handOne.get(i).getValue() == deckOne.discardPile.get(deckOne.discardPile.size() - 1).getValue()) {
+                                if (handOne.get(i).getValue() == deckOne.discardPile.get(lastDisCard).getValue()) {
                                     pileOne.add(handOne.get(i));
-                                    pileOne.add(deckOne.discardPile.get(deckOne.discardPile.size() - 1));
+                                    pileOne.add(deckOne.discardPile.get(lastDisCard));
                                     handOne.remove(i);
-                                    deckOne.discardPile.remove(deckOne.discardPile.size() - 1);
+                                    deckOne.discardPile.remove(lastDisCard);
                                     break;
                                 }
                             }
-                        }
+                        } else System.out.println("Oops, no pairs there.");
+                        if (handOne.size() <= 2) pickAllowed = true;
+                        break;
+                    case 5:
+                        if (checkPairOpponent(handOne, pileTwo.get(pileTwo.size() - 1)) && !hasDiscarded) {
+                            Value valueMatch = null;
+                            for (int i = 0; i < handOne.size(); i++) {
+                                if (handOne.get(i).getValue() == pileTwo.get(pileTwo.size() - 1).getValue()) {
+                                    valueMatch = handOne.get(i).getValue();
+                                    break;
+                                }
+                            }
+                            do {
+                                pileOne.add(pileTwo.get(pileTwo.size() - 1));
+                                pileTwo.remove(pileTwo.size() - 1);
+                            } while (pileTwo.size() > 0 && pileTwo.get(pileTwo.size() - 1).getValue() == valueMatch);
+                        } else System.out.println("Oops, no pairs available.");
+                        if (handOne.size() <= 2) pickAllowed = true;
                         break;
                     case 0:
-                        if (handOne.size() == 2) {
+                        if (handOne.size() == 2 && hasDiscarded) {
                             endOfTurn = true;
                         } else System.out.println("Not allowed, incorrect number of cards on hand");
                         break;
@@ -180,9 +210,100 @@ class PlayingCardGame extends grafik {
                 }
             }
 
-            System.out.println("Opponent turn");
+            //************************PLAYER2************************************************
+            System.out.println("Opponent played as follows:");
+            boolean pickAllowed2 = true;
+            boolean p2Done;
+            do {
+                int lastDisCard = deckOne.discardPile.size() - 1;
+                p2Done = true;
+                //***************************PAIR WITH OPP***********************************
+                if (pileOne.size() > 0) {
+                    if (checkPairOpponent(handTwo, pileOne.get(pileOne.size() - 1))) {
+                        System.out.println("Opp Pair Player Start");
+                        Value valueMatch = null;
+                        for (int i = 0; i < handTwo.size(); i++) {
+                            if (handTwo.get(i).getValue() == pileOne.get(pileOne.size() - 1).getValue()) {
+                                valueMatch = handTwo.get(i).getValue();
+                                System.out.println("before break");
+                                break;
+                            }
+                        }
+                        System.out.println("before do");
+                        do {
+                            pileTwo.add(pileOne.get(pileOne.size() - 1));
+                            pileOne.remove(pileOne.size() - 1);
+                        } while (pileOne.size() > 0 && pileOne.get(pileOne.size() - 1).getValue() == valueMatch);
+                        if (handTwo.size() < 2) pickAllowed2 = true;
+                        p2Done = false;
+                        System.out.println("Opp Pair Player Done");
+                    }
+                }
+                //************************PAIR ON HAND?*************************************
+                if (checkPairHand(handTwo)) {
+                    System.out.println("Opp Pair Hand");
+                    for (int i = 0; i < handTwo.size() - 1; i++) {
+                        for (int j = i + 1; j < handTwo.size(); j++) {
+                            if (handTwo.get(i).getValue() == handTwo.get(j).getValue()) {
+                                pileOne.add(handTwo.get(i));
+                                pileOne.add(handTwo.get(j));
+                                handTwo.remove(j);
+                                handTwo.remove(i);
+                            }
+                        }
+                    }
+                    if (handTwo.size() <= 2) pickAllowed2 = true;
+                    p2Done = false;
+                }
+                //******************************PAIR WITH DISCARD************************************
+                if (deckOne.discardPile.size() > 0) {
+                    if (checkPairDiscard(handTwo, deckOne.discardPile.get(deckOne.discardPile.size() - 1))) {
+                        System.out.println("Opp Pair Disc");
+                        for (int i = 0; i < handTwo.size(); i++) {
+                            if (handTwo.get(i).getValue() == deckOne.discardPile.get(lastDisCard).getValue()) {
+                                pileTwo.add(handTwo.get(i));
+                                pileTwo.add(deckOne.discardPile.get(lastDisCard));
+                                handTwo.remove(i);
+                                deckOne.discardPile.remove(lastDisCard);
+                                break;
+                            }
+                        }
+                        if (handTwo.size() <= 2) pickAllowed2 = true;
+                        p2Done = false;
+                    }
+                }
+                //***************************PICK UP CARD*************************************
+                if (pickAllowed2 && deckOne.deck.size() > 0) {
+                    System.out.println("Picked from Deck");
+                    handTwo.add(deckOne.deck.get(0));
+                    deckOne.deck.remove(deckOne.deck.get(0));
+                    if (handTwo.size() > 2) pickAllowed2 = false;
+                    p2Done = false;
+                }
+                //******************************THROW CARD, DONE!************************************
+            } while (!p2Done);
+            Random rand = new Random();
+            int randomIndex = rand.nextInt(handTwo.size() - 1) + 1;
+            deckOne.discardPile.add(handTwo.get(randomIndex));
+            handTwo.remove(randomIndex);
+
+            //************************ENDPLAYER2*****************************
+            System.out.println("Cards remaining: " + deckOne.deck.size());
+            if (deckOne.deck.size() == 0) isDone = true;
 
         } while (!isDone);
+
+        int pointsPlayer = 0, pointsOpp = 0;
+        for (PlayingCard pC : pileOne) {
+            pointsPlayer += 5;
+            if (pC.getNumValue() > 10) pointsPlayer += 5;
+        }
+        for (PlayingCard pC : pileTwo) {
+            pointsOpp += 5;
+            if (pC.getNumValue() > 10) pointsOpp += 5;
+        }
+
+        System.out.println("Player - Computer: " + pointsPlayer + " - " + pointsOpp);
 
     }
 
@@ -199,6 +320,13 @@ class PlayingCardGame extends grafik {
     private static boolean checkPairDiscard(List<PlayingCard> hand, PlayingCard topDisc) {
         for (PlayingCard pC : hand) {
             if (pC.getValue() == topDisc.getValue()) return true;
+        }
+        return false;
+    }
+
+    private static boolean checkPairOpponent(List<PlayingCard> hand, PlayingCard topOpp) {
+        for (PlayingCard pC : hand) {
+            if (pC.getValue() == topOpp.getValue()) return true;
         }
         return false;
     }
