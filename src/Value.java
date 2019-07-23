@@ -1,6 +1,6 @@
 public enum Value {
 
-    TWO(2) ,
+    TWO(2),
     THREE(3),
     FOUR(4),
     FIVE(5),
@@ -17,10 +17,13 @@ public enum Value {
     public int value;
 
     Value(int value) {
+        //tilldelar ett numeriskt värde till varje enum
+        //för att lättare kunna jämföra värdet på korten
         this.value = value;
     }
 
     public int getValue() {
+        //returnerar det numeriska värdet.
         return value;
     }
 

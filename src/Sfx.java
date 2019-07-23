@@ -3,7 +3,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Sfx implements Runnable {
-
+    //inte min skapelse... :D
     private String fileLocation;
 
     public Sfx(String fileLocation) {
@@ -18,9 +18,12 @@ public class Sfx implements Runnable {
     @Override
     public void run() {
         playSound(fileLocation);
+        //tagit bort loopen så ljudet bara spelas en gång
+        //sedan dör tråden
     }
 
     private void playSound(String fileName) {
+        //lagt till filnamn så man kan använda samma metod för flera ljud
         File soundFile = new File(fileName);
         AudioInputStream audioInputStream = null;
         try {
